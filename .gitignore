@@ -1,0 +1,7 @@
+# Lake build artifacts and downloaded packages
+# (run `lake update` and `lake build` to regenerate)
+.lake/
+
+# macOS metadata
+.DS_Store
+**/.DS_Store
