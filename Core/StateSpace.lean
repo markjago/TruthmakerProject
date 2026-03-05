@@ -3,6 +3,7 @@
 -- Defines the primitive parthood ordering and lub operation
 
 import Mathlib.Data.Set.Basic
+import Mathlib.Data.Set.Insert
 
 -- States are the primitive objects
 axiom State : Type

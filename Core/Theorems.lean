@@ -16,9 +16,23 @@ theorem fusion_comm : ∀ s t, s ⊔ t = t ⊔ s := by
   sorry
 
 -- Fusion is idempotent: s ⊔ s = s
--- Proof sketch: {s, s} = {s}, and lub of singleton equals the element
+-- Proof: ⨆ {s, s} = s by antisymmetry.
+--   (≤) every element of {s, s} is s, so ⨆ {s, s} ⊑ s by lub_least.
+--   (≥) s ∈ {s, s}, so s ⊑ ⨆ {s, s} by lub_upper_bound.
 theorem fusion_idemp : ∀ s, s ⊔ s = s := by
-  sorry
+  intro s
+  unfold fusion
+  apply parthood_antisymm
+  · -- ⨆ {s, s} ⊑ s: every element of {s, s} is s
+    apply lub_least
+    intro t ht
+    -- {s, s} = insert s {s}, so t ∈ {s, s} iff t = s ∨ t = s, i.e. t = s
+    simp only [Set.mem_insert_iff, Set.mem_singleton_iff, or_self] at ht
+    -- now ht : t = s; rewrite the goal t ⊑ s to s ⊑ s
+    rw [ht]
+    exact parthood_refl s
+  · -- s ⊑ ⨆ {s, s}: s is a member of {s, s}
+    exact lub_upper_bound _ s (Set.mem_insert s {s})
 
 -- Fusion is associative: (s ⊔ t) ⊔ u = s ⊔ (t ⊔ u)
 -- Proof sketch: both equal ⨆ {s, t, u}

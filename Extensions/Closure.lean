@@ -67,9 +67,23 @@ theorem subset_regular_closure : ∀ P, P ⊆ regular_closure P := by
   intro Q ⟨hPQ, _⟩
   exact hPQ hs
 
--- The closure of P is closed
+
+-- The closure of P is closed under fusion
 theorem closure_is_closed : ∀ P, is_closed (closure P) := by
-  sorry
+  intro P Q hQ hNonempty
+  -- Unfold closure in hQ and the goal so we can work with the intersection
+  simp only [closure] at hQ ⊢
+  -- Goal: lub Q ∈ ⋂₀ { R | P ⊆ R ∧ is_closed R }
+  -- Reduce to: for every R with P ⊆ R and is_closed R, lub Q ∈ R
+  rw [Set.mem_sInter]
+  intro R hR
+  -- hR : P ⊆ R ∧ is_closed R  (setOf membership reduces definitionally)
+  -- Q ⊆ R: since Q ⊆ ⋂₀ { R | ... } and that intersection is a subset of R
+  have hQR : Q ⊆ R := hQ.trans (Set.sInter_subset_of_mem hR)
+  -- R is closed, Q ⊆ R, Q nonempty ⊢ lub Q ∈ R
+  exact hR.2 Q hQR hNonempty
+
+
 
 -- The convex closure of P is convex
 theorem convex_closure_is_convex : ∀ P, is_convex (convex_closure P) := by
@@ -120,4 +134,3 @@ theorem convex_closure_idemp : ∀ P, convex_closure (convex_closure P) = convex
 -- Regular closure is idempotent: regular_closure (regular_closure P) = regular_closure P
 theorem regular_closure_idemp : ∀ P, regular_closure (regular_closure P) = regular_closure P := by
   sorry
-
